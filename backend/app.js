@@ -1,16 +1,19 @@
 import express from "express";
 import dotenv from "dotenv";
+import helmet from "helmet";
+import cookieParser from "cookie-parser";
 
 //Routes
 import DataBase from "./src/config/database.js";
 import UserRoutes from "./src/routes/UserRoutes.js"
 
 dotenv.config();
-const app = express();
 const PORT = process.env.PORT || 2000;
 
-
+const app = express();
 app.use(express.json());
+app.use(cookieParser());
+app.use(helmet());
 
 //User
 app.use("/api/auth", UserRoutes);
