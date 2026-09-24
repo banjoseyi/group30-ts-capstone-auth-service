@@ -7,7 +7,7 @@ import cookieParser from "cookie-parser";
 import DataBase from "./src/config/database.js";
 import UserRoutes from "./src/routes/UserRoutes.js";
 import errorHandler from "./src/middleware/ErrorHandler.js";
-
+import AdminRoutes from "./src/routes/AdminRoutes.js";
 
 const PORT = process.env.PORT || 2000;
 
@@ -18,6 +18,8 @@ app.use(cookieParser());
 app.use(helmet());
 
 app.use("/api/auth", UserRoutes);
+
+app.use("/api/admin", AdminRoutes);
 
 // Always after routes
 app.use(errorHandler);
