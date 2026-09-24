@@ -398,6 +398,263 @@ const deleteProfileImage = async (req, res, next) => {
 };
 
 
+const forgotPassword = async (req, res, next) => {
+    try {
+        const { email } = req.body;
+
+        const user = await User.findOne({ email });
+
+        const genericResponse = {
+            success: true,
+            message: "If an account exists for that email, a password reset link has been sent."
+        };
+
+        if (!user) {
+            return res.status(200).json(genericResponse);
+        }
+
+        const resetToken = crypto
+            .randomBytes(32)
+            .toString("hex");
+
+        const resetTokenHash = crypto
+            .createHash("sha256")
+            .update(resetToken)
+            .digest("hex");
+
+        user.passwordResetToken = resetTokenHash;
+
+        user.passwordResetExpiresAt = new Date(Date.now() + 15 * 60 * 1000);
+
+        await user.save();
+
+        const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+
+        try {
+            await sendEmail({
+                to: user.email,
+                subject: "Reset your password",
+                html: `
+                    <h2>Password Reset Request</h2>
+
+                    <p>You requested to reset your password.</p>
+
+                    <p>
+                        <a href="${resetUrl}">
+                            Reset Password
+                        </a>
+                    </p>
+
+                    <p>This link will expire in 15 minutes.</p>
+
+                    <p>
+                        If you did not request this password reset,
+                        you can ignore this email.
+                    </p>
+                `,
+            });
+        } catch (emailError) {
+            user.passwordResetToken = undefined;
+            user.passwordResetExpiresAt = undefined;
+
+            await user.save();
+
+            throw new AppError("Unable to send password reset email", 500, "EMAIL_SEND_FAILED");
+        }
+
+        return res.status(200).json(genericResponse);
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+const resetPassword = async (req, res, next) => {
+    try {
+        const { token } = req.params;
+        const { password } = req.body;
+
+        const resetTokenHash = crypto
+            .createHash("sha256")
+            .update(token)
+            .digest("hex");
+
+        const user = await User.findOne({
+            passwordResetToken: resetTokenHash,
+            passwordResetExpiresAt: { $gt: new Date() }
+        }).select("+passwordResetToken +passwordResetExpiresAt");
+
+        if (!user) {
+            throw new AppError("Password reset token is invalid or has expired", 400, "INVALID_RESET_TOKEN");
+        }
+
+        user.password = password;
+        user.passwordChangedAt = new Date();
+        user.passwordResetToken = undefined;
+        user.passwordResetExpiresAt = undefined;
+
+        await user.save();
+
+        await Session.updateMany(
+            {
+                user: user._id,
+                revokedAt: null
+            },
+            {
+                $set: {
+                    revokedAt: new Date()
+                }
+            }
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "Password reset successfully. Please log in again."
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+const changePassword = async (req, res, next) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+
+        const user = await User.findById(req.user._id).select("+password");
+
+        if (!user) {
+            throw new AppError("User no longer exists", 401, "USER_NOT_FOUND");
+        }
+
+        const passwordMatches =
+            await user.comparePassword(currentPassword);
+
+        if (!passwordMatches) {
+            throw new AppError("Current password is incorrect", 401, "INVALID_CURRENT_PASSWORD");
+        }
+
+        const samePassword =
+            await user.comparePassword(newPassword);
+
+        if (samePassword) {
+            throw new AppError("New password must be different from the current password", 400, "SAME_PASSWORD");
+        }
+
+        user.password = newPassword;
+        user.passwordChangedAt = new Date();
+
+        await user.save();
+
+        // Revoke all current refresh sessions
+        await Session.updateMany(
+            {
+                user: user._id,
+                revokedAt: null
+            },
+            {
+                $set: {
+                    revokedAt: new Date()
+                }
+            }
+        );
+
+        res.clearCookie("refreshToken", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite:
+                process.env.NODE_ENV === "production"
+                    ? "none"
+                    : "lax",
+        });
+
+        return res.status(200).json({
+            success: true,
+            message:
+                "Password changed successfully. Please log in again."
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+
+
+const revokeSession = async (req, res, next) => {
+    try {
+        const { sessionId } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(sessionId)) {
+            throw new AppError("Invalid session ID", 400, "INVALID_SESSION_ID");
+        }
+
+        const session = await Session.findOne({
+            _id: sessionId,
+            user: req.user._id
+        });
+
+        if (!session) {
+            throw new AppError("Session not found", 404, "SESSION_NOT_FOUND");
+        }
+
+        if (session.revokedAt) {
+            throw new AppError("Session has already been revoked", 400, "SESSION_ALREADY_REVOKED");
+        }
+
+        session.revokedAt = new Date();
+
+        await session.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Session revoked successfully"
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+const revokeAllSessions = async (req, res, next) => {
+    try {
+        await Session.updateMany(
+            {
+                user: req.user._id,
+                revokedAt: null
+            },
+            {
+                $set: {
+                    revokedAt: new Date()
+                }
+            }
+        );
+
+        res.clearCookie("refreshToken", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite:
+                process.env.NODE_ENV === "production"
+                    ? "none"
+                    : "lax",
+        });
+
+        return res.status(200).json({
+            success: true,
+            message:
+                "All active sessions have been revoked. Please log in again."
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+
 export default {
     registerUser,
     loginUser,
@@ -407,4 +664,9 @@ export default {
     getSessionHistory,
     updateProfileImage,
     deleteProfileImage,
+    forgotPassword,
+    resetPassword,
+    changePassword,
+    revokeSession,
+    revokeAllSessions
 };

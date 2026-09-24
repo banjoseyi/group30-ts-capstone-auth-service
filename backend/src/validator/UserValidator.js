@@ -84,7 +84,79 @@ const loginSchema = Joi.object({
     allowUnknown: false,
 });
 
+
+const forgotPasswordSchema = Joi.object({
+    email: Joi.string()
+        .trim()
+        .lowercase()
+        .email()
+        .required()
+        .messages({
+            "string.empty": "Email is required",
+            "string.email": "Please provide a valid email address",
+            "any.required": "Email is required"
+        })
+});
+
+
+const resetPasswordSchema = Joi.object({
+    password: Joi.string()
+        .min(8)
+        .max(128)
+        .pattern(/^(?=.*[A-Za-z])(?=.*\d)/)
+        .required()
+        .messages({
+            "string.empty": "Password is required",
+            "string.min": "Password must contain at least 8 characters",
+            "string.max": "Password cannot exceed 128 characters",
+            "string.pattern.base": "Password must contain at least one letter and one number",
+            "any.required": "Password is required"
+        }),
+
+    confirmPassword: Joi.string()
+        .valid(Joi.ref("password"))
+        .required()
+        .messages({
+            "any.only": "Passwords do not match",
+            "any.required": "Please confirm your password"
+        })
+});
+
+
+const changePasswordSchema = Joi.object({
+    currentPassword: Joi.string()
+        .required()
+        .messages({
+            "string.empty": "Current password is required",
+            "any.required": "Current password is required"
+        }),
+
+    newPassword: Joi.string()
+        .min(8)
+        .max(128)
+        .pattern(/^(?=.*[A-Za-z])(?=.*\d)/)
+        .required()
+        .messages({
+            "string.empty": "New password is required",
+            "string.min": "New password must contain at least 8 characters",
+            "string.max": "New password cannot exceed 128 characters",
+            "string.pattern.base": "New password must contain at least one letter and one number",
+            "any.required": "New password is required"
+        }),
+
+    confirmPassword: Joi.string()
+        .valid(Joi.ref("newPassword"))
+        .required()
+        .messages({
+            "any.only": "Passwords do not match",
+            "any.required": "Please confirm your new password"
+        })
+});
+
 export default {
     registerSchema,
-    loginSchema
+    loginSchema,
+    forgotPasswordSchema,
+    resetPasswordSchema,
+    changePasswordSchema
 }
