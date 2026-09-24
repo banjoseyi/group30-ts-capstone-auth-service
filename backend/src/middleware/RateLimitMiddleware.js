@@ -21,8 +21,7 @@ const createLimiter = ({ windowMs, limit, message, keyGenerator }) =>
 const registerLimiter = createLimiter({
     windowMs: 60 * 60 * 1000,
     limit: 5,
-    message:
-        "Too many registration attempts. Please try again later.",
+    message: "Too many registration attempts. Please try again later.",
 });
 
 //Limit too many logins
@@ -36,8 +35,8 @@ const loginLimiter = rateLimit({
 const refreshLimiter = createLimiter({
     windowMs: 15 * 60 * 1000,
     limit: 30,
-    message:
-        "Too many refresh attempts. Please try again shortly.",
+    message: "Too many refresh attempts. Please try again shortly.",
 });
 
-export default { loginLimiter, registerLimiter, refreshLimiter};
+
+export default { loginLimiter, registerLimiter, refreshLimiter, forgotPasswordLimiter };

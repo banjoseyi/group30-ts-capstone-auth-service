@@ -1,47 +1,73 @@
 # Database Collections
 
-## 1. Users
-Stores all registered users.
+The authentication service uses two main MongoDB collections.
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| _id | ObjectId | auto | Unique identifier |
-| name | String | Yes | Full name |
-| email | String | Yes | Unique email address |
-| password | String | Yes | Hashed password |
-| role | String | Yes | "user" or "admin" |
-| resetPasswordToken | String | No | Token for password reset |
-| resetPasswordExpires | Date | No | Token expiry time |
-| createdAt | Date | auto | Timestamp |
-| updatedAt | Date | auto | Timestamp |
+## Users Collection
+
+Stores account and security information.
+
+Main fields:
+
+```text
+firstName
+lastName
+userName
+email
+password
+passwordChangedAt
+passwordResetToken
+passwordResetExpiresAt
+profileImage
+status
+role
+createdAt
+updatedAt
+```
+
+Important rules:
+
+- `email` is unique.
+- `userName` is unique.
+- passwords are hashed with bcrypt.
+- password and reset-token fields are hidden from normal queries.
+- `role` is either `user` or `admin`.
+- `status` is either `active` or `suspended`.
 
 ---
 
-## 2. Tokens (Refresh Tokens)
-Stores refresh tokens for maintaining sessions.
+## Sessions Collection
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| _id | ObjectId | auto | Unique identifier |
-| userId | ObjectId | Yes | Ref → Users |
-| token | String | Yes | Refresh token string |
-| expiresAt | Date | Yes | Token expiry time |
-| createdAt | Date | auto | Timestamp |
+Stores refresh-token sessions created during login.
+
+Main fields:
+
+```text
+user
+refreshTokenHash
+expiresAt
+revokedAt
+userAgent
+ipAddress
+createdAt
+updatedAt
+```
+
+Important rules:
+
+- `user` references the User collection.
+- raw refresh tokens are never stored.
+- only the SHA-256 token hash is stored.
+- `revokedAt` marks a session as inactive.
+- expired sessions are automatically removed using a TTL index on `expiresAt`.
 
 ---
 
-## Relationships
-- One User → Many Tokens (one per session/device)
+## Relationship
 
-## Example User Document
-{
-  "_id": "64b1f1c2e4b0a1c2d3e4f5a6",
-  "name": "Authentication Group30",
-  "email": "group30@email.com",
-  "password": "$2b$10$hashedpassword",
-  "role": "user",
-  "resetPasswordToken": null,
-  "resetPasswordExpires": null,
-  "createdAt": "2026-09-20T10:00:00Z",
-  "updatedAt": "2026-09-20T10:00:00Z"
-}
+```text
+User
+  │
+  └── has many Sessions
+```
+
+A single user can have multiple active sessions from different devices or browsers.
