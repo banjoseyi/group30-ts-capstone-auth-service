@@ -38,10 +38,16 @@ const refreshLimiter = createLimiter({
     message: "Too many refresh attempts. Please try again shortly.",
 });
 
+// Limit too many forgot password requests
+const forgotPasswordLimiter = createLimiter({
+    windowMs: 60 * 60 * 1000,
+    limit: 5,
+    message: "Too many password reset attempts. Please try again later.",
+});
 
 export default {
     loginLimiter,
     registerLimiter,
     refreshLimiter,
-    forgotPasswordLimiter
+    forgotPasswordLimiter,
 };
