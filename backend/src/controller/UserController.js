@@ -7,9 +7,14 @@ import crypto from "crypto";
 import TokenUtils from "../utils/TokenUtils.js";
 import uploadImage from "../utils/UploadImage.js";
 import cloudinary from "../config/cloudinary.js";
+import sendEmail from "../utils/SendEmail.js";
 
 
-const { createAccessToken, createRefreshToken, hashRefreshToken } = TokenUtils;
+const {
+    createAccessToken,
+    createRefreshToken,
+    hashRefreshToken
+} = TokenUtils;
 
 const registerUser = async (req, res, next) => {
     try {
@@ -48,6 +53,8 @@ const registerUser = async (req, res, next) => {
         next(error);
     }
 }
+
+
 
 const loginUser = async (req, res, next) => {
     try {

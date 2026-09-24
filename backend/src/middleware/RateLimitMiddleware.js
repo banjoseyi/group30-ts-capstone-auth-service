@@ -39,4 +39,9 @@ const refreshLimiter = createLimiter({
 });
 
 
-export default { loginLimiter, registerLimiter, refreshLimiter, forgotPasswordLimiter };
+export default {
+    loginLimiter,
+    registerLimiter,
+    refreshLimiter,
+    forgotPasswordLimiter
+};
