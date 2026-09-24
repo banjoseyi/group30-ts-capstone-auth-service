@@ -26,20 +26,19 @@ const registerSchema = Joi.object(
                 "string.max": "Last name cannot exceed 30 characters",
                 "any.required": "Last name is required",
             }),
-        username: Joi.string()
+        userName: Joi.string()
             .trim()
             .lowercase()
-            .alphanum()
             .min(3)
             .max(20)
             .required()
             .pattern(/^[a-zA-Z0-9_]+$/)
             .messages({
-                "string.base": "Username must be text",
-                "string.empty": "usernam is required",
-                "string.min": "usernam must contain at least 2 characters",
-                "string.max": "usernam cannot exceed 20 characters",
-                "any.required": "usernam is required",
+                "string.base": "UserName must be text",
+                "string.empty": "userName is required",
+                "string.min": "userName must contain at least 3 characters",
+                "string.max": "userName cannot exceed 20 characters",
+                "any.required": "userName is required",
             }),
         email: Joi.string()
             .trim()
@@ -85,4 +84,7 @@ const loginSchema = Joi.object({
     allowUnknown: false,
 });
 
-export default { registerSchema, loginSchema }
+export default {
+    registerSchema,
+    loginSchema
+}

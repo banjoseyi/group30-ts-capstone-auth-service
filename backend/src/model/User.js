@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema(
             required: true,
             trim: true
         },
-        username: {
+        userName: {
             type: String,
             required: true,
             trim: true,
@@ -35,6 +35,28 @@ const userSchema = new mongoose.Schema(
             maxlength: 128,
             select: false
         },
+        passwordChangedAt: {
+            type: Date,
+            default: null
+        },
+        passwordResetToken: {
+            type: String,
+            select: false
+        },
+        passwordResetExpiresAt: {
+            type: Date,
+            select: false
+        },
+        profileImage: {
+            url: {
+                type: String,
+                default: null
+            },
+            publicId: {
+                type: String,
+                default: null
+            }
+        },
         status: {
             type: String,
             enum: ["active", "suspended"],
@@ -45,6 +67,7 @@ const userSchema = new mongoose.Schema(
             enum: ["user", "admin"],
             default: "user"
         }
+
     },
     { timestamps: true }
 )

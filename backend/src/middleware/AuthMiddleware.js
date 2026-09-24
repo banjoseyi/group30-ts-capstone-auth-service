@@ -1,15 +1,16 @@
 import jwt from "jsonwebtoken";
 import User from "../model/User.js";
+import AppError from "../utils/AppError.js";
 
 const protect = async (req, res, next) => {
     try {
         const authorization = req.headers.authorization;
 
-        if (!authorization || !authorization.startsWith("Bearer")) {
-            return res.status(401).json({
-                success: false,
-                message: "Access token is required",
-            });
+        if (
+            !authorization ||
+            !authorization.startsWith("Bearer ")
+        ) {
+            throw new AppError("Access token is required", 401, "ACCESS_TOKEN_REQUIRED");
         }
 
         const accessToken = authorization.split(" ")[1];
@@ -19,39 +20,54 @@ const protect = async (req, res, next) => {
             process.env.ACCESS_TOKEN_SECRET,
             {
                 issuer: "capstone-auth-project-api",
-                audience: "capstone-auth-project-client",
+                audience: "capstone-auth-project-client"
             }
         );
 
         const user = await User.findById(decoded.id);
 
         if (!user) {
-            return res.status(401).json({
-                success: false,
-                message: "User no longer exists",
-            });
+            throw new AppError("User no longer exists", 401, "USER_NOT_FOUND");
+        }
+
+        // Reject access tokens created before password change
+        if (user.passwordChangedAt) {
+
+            const passwordChangedTimestamp = Math.floor(
+                user.passwordChangedAt.getTime() / 1000
+            );
+
+            if (decoded.iat < passwordChangedTimestamp) {
+                throw new AppError("Password was recently changed. Please log in again", 401, "PASSWORD_RECENTLY_CHANGED");
+            }
+        }
+
+        if (user.status === "suspended") {
+            throw new AppError("This account has been suspended", 403, "ACCOUNT_SUSPENDED");
         }
 
         req.user = user;
+
         next();
 
     } catch (error) {
+
         if (error.name === "TokenExpiredError") {
-            return res.status(401).json({
-                success: false,
-                code: "ACCESS_TOKEN_EXPIRED",
-                message: "Access token has expired",
-            });
+            return next(
+                new AppError("Access token has expired", 401, "ACCESS_TOKEN_EXPIRED")
+            );
         }
 
-        return res.status(401).json({
-            success: false,
-            code: "INVALID_ACCESS_TOKEN",
-            message: "Access token is invalid",
-        });
+        if (error.name === "JsonWebTokenError") {
+            return next(
+                new AppError("Access token is invalid", 401, "INVALID_ACCESS_TOKEN")
+            );
+        }
+
+        next(error);
     }
 };
 
-
-
-export default { protect };
+export default {
+    protect
+};
