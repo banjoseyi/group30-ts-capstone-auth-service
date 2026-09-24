@@ -3,7 +3,10 @@ import Session from "../model/Session.js";
 import AppError from "../utils/AppError.js";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 import TokenUtils from "../utils/TokenUtils.js";
+import uploadImage from "../utils/UploadImage.js";
+import cloudinary from "../config/cloudinary.js";
 
 
 const { createAccessToken, createRefreshToken, hashRefreshToken } = TokenUtils;
@@ -225,7 +228,7 @@ const refreshAccessToken = async (req, res, next) => {
             A different refresh token was presented for this
             session, so revoke the session.
             */
-           
+
             session.revokedAt = new Date();
             await session.save();
 
@@ -331,11 +334,77 @@ const getSessionHistory = async (req, res, next) => {
 };
 
 
+const updateProfileImage = async (req, res, next) => {
+    try {
+        if (!req.file) {
+            throw new AppError("Profile image is required", 400, "PROFILE_IMAGE_REQUIRED");
+        }
+
+        const user = req.user;
+
+        const uploadResult = await uploadImage(req.file.buffer);
+
+        if (user.profileImage?.publicId) {
+            await cloudinary.uploader.destroy(user.profileImage.publicId);
+        }
+
+        user.profileImage = {
+            url: uploadResult.secure_url,
+            publicId: uploadResult.public_id
+        };
+
+        await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Profile image updated successfully",
+            profileImage: user.profileImage
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+const deleteProfileImage = async (req, res, next) => {
+    try {
+        const user = req.user;
+
+        if (!user.profileImage?.publicId) {
+            throw new AppError("No profile image to delete", 404, "PROFILE_IMAGE_NOT_FOUND");
+        }
+
+        await cloudinary.uploader.destroy(
+            user.profileImage.publicId
+        );
+
+        user.profileImage = {
+            url: null,
+            publicId: null
+        };
+
+        await user.save();
+
+        return res.status(200).json({
+            success: true,
+            message: "Profile image deleted successfully",
+            profileImage: user.profileImage
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+
 export default {
     registerUser,
     loginUser,
     logoutUser,
     refreshAccessToken,
     getCurrentUser,
-    getSessionHistory
+    getSessionHistory,
+    updateProfileImage,
+    deleteProfileImage,
 };
