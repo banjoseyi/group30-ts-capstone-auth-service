@@ -1,5 +1,6 @@
 import '../styles/landing.css';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import {
   ArrowRight,
   Check,
@@ -92,6 +93,13 @@ const features = [
   },
 ];
 
+const scrollReveal = {
+  initial: { opacity: 0, y: 30 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.2 },
+  transition: { duration: 0.6, ease: 'easeOut' },
+};
+
 const technologies = [
   { name: 'Node.js', logo: nodeLogo },
   { name: 'Express.js', wordmark: 'express', tone: 'express' },
@@ -167,7 +175,7 @@ export default function Landing() {
     <div className="landing-page">
       <Navbar />
       <main>
-        <section className="landing-hero">
+        <motion.section className="landing-hero" {...scrollReveal}>
           <div className="landing-hero__copy">
             <h1>Group 30 <span>Authentication</span> Service</h1>
             <p>A full-stack authentication system built to demonstrate secure login, password recovery,<br className="landing-desktop-break" /> session management and role-based access.</p>
@@ -177,9 +185,9 @@ export default function Landing() {
             </div>
           </div>
           <img className="landing-hero__image" src={heroPreview} alt="Group 30 authentication dashboard preview" />
-        </section>
+        </motion.section>
 
-        <section className="landing-features">
+        <motion.section className="landing-features" {...scrollReveal}>
           <div className="landing-section-heading"><span>CORE FEATURES</span><h2>What We Built</h2><p>Key parts of our authentication system.</p></div>
           <div className="landing-feature-grid">
             {features.map(({ icon: Icon, title, description, detail, badge, badgeTone, featured, compact, iconTone }) => (
@@ -190,9 +198,9 @@ export default function Landing() {
               </article>
             ))}
           </div>
-        </section>
+        </motion.section>
 
-        <section className="landing-stack">
+        <motion.section className="landing-stack" {...scrollReveal}>
           <div className="landing-section-heading"><span className="landing-stack__eyebrow">TECHNOLOGY STACK<span className="landing-stack__background-text" aria-hidden="true">TECHNOLOGY STACK</span></span><h2>Built With</h2><p>The tools and technologies used to build the project.</p></div>
           <div className="landing-stack__grid">{technologies.map(({ name, logo, wordmark, icon: Icon, tone }) => (
             <div className="landing-stack__item" key={name}>
@@ -200,29 +208,29 @@ export default function Landing() {
               <span>{name}</span>
             </div>
           ))}</div>
-        </section>
+        </motion.section>
 
-        <section className="landing-workflows">
+        <motion.section className="landing-workflows" {...scrollReveal}>
           <div className="landing-section-heading"><span>PROJECT PREVIEW</span><h2>See It In Action</h2><p>A quick look at the application experience.</p></div>
           <div className="landing-workflows__grid">
             <WorkflowPreview number="01" title="Registration" label="Create an account with clear validation." type="register" />
             <WorkflowPreview number="02" title="Account Dashboard" label="View account details and quick actions." type="dashboard" />
             <WorkflowPreview number="03" title="Session Control" label="Review and revoke active logins." type="sessions" />
           </div>
-        </section>
+        </motion.section>
 
-        <section className="landing-about">
+        <motion.section className="landing-about" {...scrollReveal}>
           <div className="landing-about__copy"><span>TS ACADEMY • GROUP 30</span><h2>Designed and developed as our TS Academy capstone project.</h2><p>A practical demonstration of authentication, API, security, and frontend concepts developed during the project.</p><div><span>Learn Together</span><span>Build Together</span><span>Grow Together</span></div></div>
           <div className="landing-about__visual">
             <img className="landing-about__image" src={userManagementPreview} alt="Group 30 user management dashboard preview" />
             <p className="landing-about__scribble" aria-label="Learning, Building, Together, at TS Academy"><span>Learning</span><span>Building</span><span>Together</span><span>@ TS Academy</span></p>
             <div className="landing-about__team-initials" aria-label="Engineering team initials: OO, CD, HD"><span>OO</span><span>CD</span><span>HD</span></div>
           </div>
-        </section>
+        </motion.section>
 
-        <section className="landing-cta"><div><h2>Ready to explore the project?</h2><p>Create an account or sign in to try the authentication system.</p></div><div><Link to="/register">Create Account <ArrowRight size={15} /></Link><Link to="/login">Sign In</Link></div></section>
+        <motion.section className="landing-cta" {...scrollReveal}><div><h2>Ready to explore the project?</h2><p>Create an account or sign in to try the authentication system.</p></div><div><Link to="/register">Create Account <ArrowRight size={15} /></Link><Link to="/login">Sign In</Link></div></motion.section>
       </main>
-      <footer className="landing-footer"><div><Link to="/" className="landing-footer__brand"><span>Ts</span> Group 30 Auth</Link><small>TS Academy • Capstone Project</small><nav><a href="https://github.com" target="_blank" rel="noreferrer">GitHub</a><a href="https://www.linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a></nav></div><p>TS Academy Capstone Project • Group 30</p></footer>
+      <motion.footer className="landing-footer" {...scrollReveal}><div><Link to="/" className="landing-footer__brand"><span>Ts</span> Group 30 Auth</Link><small>TS Academy • Capstone Project</small><nav><a href="https://github.com" target="_blank" rel="noreferrer">GitHub</a><a href="https://www.linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a></nav></div><p>TS Academy Capstone Project • Group 30</p></motion.footer>
     </div>
   );
 }
