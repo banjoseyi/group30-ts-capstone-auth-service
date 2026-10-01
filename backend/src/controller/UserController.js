@@ -130,6 +130,8 @@ const loginUser = async (req, res, next) => {
                 userName: user.userName,
                 email: user.email,
                 role: user.role,
+                createdAt: user.createdAt,
+                profileImage: user.profileImage,
             },
         });
 
@@ -316,7 +318,8 @@ const getCurrentUser = async (req, res) => {
             email: req.user.email,
             role: req.user.role,
             status: req.user.status,
-            profileImage: req.user.profileImage
+            profileImage: req.user.profileImage,
+            createdAt: req.user.createdAt,
         },
     });
 };
