@@ -1,0 +1,233 @@
+.sessions-banner {
+  padding: 1.35rem;
+  background: #fff;
+  box-shadow: 0 3px 14px rgba(24, 31, 56, 0.06);
+}
+
+.sessions-banner p {
+  max-width: 500px;
+}
+
+.sessions-banner__state {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 8px;
+  background: #F3F2FF;
+}
+
+.sessions-banner__state div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.sessions-banner__state small {
+  color: #6D7181;
+  font-size: 0.52rem;
+}
+
+.sessions-banner__state b {
+  font-size: 0.68rem;
+}
+
+.sessions-list-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.25rem;
+}
+
+.sessions-list-heading h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+}
+
+.sessions-list-heading h2 span {
+  padding: 0.15rem 0.45rem;
+  border-radius: 20px;
+  color: #fff;
+  background: var(--color-indigo);
+  font-size: 0.58rem;
+}
+
+.sessions-list-heading .btn {
+  font-size: 0.68rem;
+}
+
+.sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.session-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-width: 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid #ECEEF4;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(24, 31, 56, 0.04);
+}
+
+.session-row__icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border-radius: 8px;
+  color: var(--color-indigo);
+  background: #EBE9FF;
+}
+
+.session-row__details {
+  flex: 1;
+  min-width: 0;
+}
+
+.session-row__details h3 {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+}
+
+.session-row__details>div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.22rem;
+  color: var(--color-text-muted);
+  font-size: 0.61rem;
+}
+
+.session-row__details>div span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.18rem;
+}
+
+.session-current,
+.session-active,
+.session-ended {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.13rem 0.38rem;
+  border-radius: 20px;
+  font-size: 0.55rem;
+  font-weight: 600;
+}
+
+.session-current {
+  color: #4D55CB;
+  background: #EFEDFF;
+}
+
+.session-active {
+  color: #087C66;
+  background: #E4F8F2;
+}
+
+.session-ended {
+  color: #787D8D;
+  background: #F0F0F4;
+}
+
+.session-current-device {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.55rem;
+  border-radius: 6px;
+  color: #4D55CB;
+  background: #EFEDFF;
+  font-size: 0.62rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.session-row>.btn {
+  flex-shrink: 0;
+  font-size: 0.62rem;
+}
+
+.session-row--ended {
+  opacity: 0.65;
+  background: #F8F8FC;
+}
+
+.sessions-tip {
+  display: flex;
+  gap: 0.7rem;
+  padding: 1rem;
+  border-radius: 8px;
+  color: #4F566B;
+  background: #F1F0FF;
+}
+
+.sessions-tip>span {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  border-radius: 50%;
+  color: var(--color-indigo);
+  background: #E2DFFF;
+}
+
+.sessions-tip strong {
+  font-size: 0.68rem;
+}
+
+.sessions-tip p {
+  margin-top: 0.15rem;
+  font-size: 0.66rem;
+  line-height: 1.5;
+}
+
+.sessions-empty {
+  padding: 1.5rem;
+  border-radius: 7px;
+  color: var(--color-text-muted);
+  background: #fff;
+  text-align: center;
+  font-size: 0.78rem;
+}
+
+
+@media (max-width: 760px) { .sessions-banner { align-items: flex-start; flex-direction: column; } }
+
+@media (max-width: 640px) {
+  .sessions-banner { padding: 1rem; }
+  .sessions-banner p { font-size: 0.82rem; }
+  .sessions-banner__state { align-self: stretch; }
+  .sessions-list-heading { align-items: stretch; flex-direction: column; gap: 0.7rem; }
+  .sessions-list-heading .btn { justify-content: center; min-height: 44px; }
+  .session-row {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr);
+    align-items: start;
+    gap: 0.65rem;
+    padding: 0.85rem;
+  }
+  .session-row__details { min-width: 0; }
+  .session-row__details h3 { font-size: 0.85rem; overflow-wrap: anywhere; }
+  .session-row__details>div { display: grid; gap: 0.45rem; margin-top: 0.5rem; font-size: 0.75rem; }
+  .session-row__details>div span { min-width: 0; overflow-wrap: anywhere; }
+  .session-row>.btn,
+  .session-current-device,
+  .session-row>.session-ended { grid-column: 1 / -1; justify-content: center; width: 100%; min-height: 42px; margin: 0; }
+  .sessions-tip { align-items: flex-start; padding: 0.85rem; }
+  .sessions-tip p { font-size: 0.78rem; }
+}
