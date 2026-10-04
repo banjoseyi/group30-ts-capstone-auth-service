@@ -57,11 +57,11 @@ Responsible for the end-to-end technical development and delivery of the project
 
 ### Technical Collaborators
 
-**Chidozie Emeribe**  
-*Technical Collaboration & Development Sessions*
+**Chidozie Jesson Emeribe**<br>
+*Technical Contributor | Collaborative Development & Knowledge Sharing*
 
-**Hameedah**  
-*Technical Collaboration & Development Sessions*
+**Hameedah Omojoju Adamo**<br>
+*Technical Contributor | Collaborative Development & Knowledge Sharing*
 
 The collaborators participated in coding sessions, implementation discussions, and knowledge-sharing activities during selected stages of development.
 
