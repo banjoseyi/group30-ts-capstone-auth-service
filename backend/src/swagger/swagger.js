@@ -889,13 +889,15 @@ const swaggerSpec = swaggerJsdoc({
             version: "1.0.0",
             description:
                 "TS Academy Group 30 Capstone Project. " +
-                "Designed, developed, documented and deployed " +
-                "by Oluwaseyifunmi Oluwatunmise Banjo, Lead Full-Stack Developer.",
+                "Designed, developed, documented and deployed under the leadership " +
+                "of Oluwaseyifunmi Oluwatunmise Banjo, Lead Full-Stack Developer, " +
+                "with technical contributions from Chidozie Jesson Emeribe and " +
+                "Hameedah Omojoju Adamo.",
 
             contact: {
                 name: "Oluwaseyifunmi Oluwatunmise Banjo",
                 email: "Banjoseyi2@gmail.com",
-                url: "https://github.com/your-username"
+                url: "https://github.com/banjoseyi"
             }
         },
 
