@@ -886,11 +886,17 @@ const swaggerSpec = swaggerJsdoc({
 
         info: {
             title: "Group 30 Authentication Service API",
-
             version: "1.0.0",
-
             description:
-                "TS Academy capstone project API documentation for user authentication, profiles, session management and admin operations. Sign in to obtain an access token, then select Authorize to access protected endpoints. Refresh tokens are stored in HTTP-only cookies."
+                "TS Academy Group 30 Capstone Project. " +
+                "Designed, developed, documented and deployed " +
+                "by Oluwaseyifunmi Oluwatunmise Banjo, Lead Full-Stack Developer.",
+
+            contact: {
+                name: "Oluwaseyifunmi Oluwatunmise Banjo",
+                email: "Banjoseyi2@gmail.com",
+                url: "https://github.com/your-username"
+            }
         },
 
         servers: [

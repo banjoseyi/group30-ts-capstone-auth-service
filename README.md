@@ -17,6 +17,58 @@ This project provides a secure account system with:
 
 The backend exposes authenticated and public API routes under `/api/auth` and `/api/admin`, while the frontend consumes these endpoints and manages user state through React context.
 
+## UI/UX Design (Figma)
+
+The application's user interface and experience were designed in Figma before development. I led the design process, from planning the application layout and user flows to creating the interface and translating the designs into the functional frontend.
+
+**Design deliverables include:**
+
+- User interface design and page layouts.
+- Authentication screens and user flows.
+- Reusable components and visual consistency.
+- Responsive design considerations.
+- Translation of Figma designs into the frontend implementation.
+
+[View the Figma Design](https://www.figma.com/design/0eyCti9bOE5qWj7R0nzWcu/Group-30?node-id=1374-13133&t=6XwXBHCBRVvOU2wL-1)
+
+**Design & implementation:** Oluwaseyifunmi Oluwatunmise Banjo, Lead Developer & UI/UX Designer.
+
+## Project Team & Contributions
+
+**TS Academy | Group 30 Capstone Project**
+
+This project was developed as part of the TS Academy capstone program. While it was a group assignment, the core technical implementation was independently completed by the lead developer, with support from team members through collaborative coding and knowledge-sharing sessions.
+
+### Lead Developer & Project Architect
+
+**Oluwaseyifunmi Oluwatunmise Banjo**  
+*Full-Stack Developer | Backend Engineer | UI/UX Designer*
+
+Responsible for the end-to-end technical development and delivery of the project, including:
+
+- Designing the application's UI/UX using Figma.
+- Developing the frontend and integrating it with the backend.
+- Architecting and implementing the RESTful API using Node.js and Express.
+- Implementing authentication, authorization, password recovery, role-based access control, and session management.
+- Integrating MongoDB and third-party services.
+- Creating Swagger/OpenAPI documentation.
+- Managing version control, testing, and production deployment on Render and Vercel.
+- Leading collaborative coding sessions and explaining implementation decisions to team members.
+
+### Technical Collaborators
+
+**Chidozie Emeribe**  
+*Technical Collaboration & Development Sessions*
+
+**Hameedah**  
+*Technical Collaboration & Development Sessions*
+
+The collaborators participated in coding sessions, implementation discussions, and knowledge-sharing activities during selected stages of development.
+
+### Teamwork & Project Delivery
+
+The project combined independent technical ownership with collaborative learning and team engagement. As lead developer, I managed the implementation while facilitating development sessions to share technical knowledge and encourage team participation.
+
 ## Tech Stack
 
 ### Backend
