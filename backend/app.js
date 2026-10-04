@@ -5,6 +5,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
+import { swaggerUi, swaggerSpec } from "./src/swagger/swagger.js";
 
 import DataBase from "./src/config/database.js";
 import UserRoutes from "./src/routes/UserRoutes.js";
@@ -39,6 +40,17 @@ app.get("/health", (req, res) => {
 // API routes
 app.use("/api/auth", UserRoutes);
 app.use("/api/admin", AdminRoutes);
+
+
+app.use( "/api-docs",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec, {
+        swaggerOptions: {
+            persistAuthorization: true,
+            withCredentials: true,
+        },
+    })
+);
 
 // Error handler must come after the routes
 app.use(errorHandler);
