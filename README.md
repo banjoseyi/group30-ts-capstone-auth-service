@@ -63,6 +63,11 @@ Responsible for the end-to-end technical development and delivery of the project
 **Hameedah Omojoju Adamo**<br>
 *Technical Contributor | Collaborative Development & Knowledge Sharing*
 
+###Team Members
+
+**Umukoro Precious**<br>
+**Adeola Maimunah Bolade**<br>
+
 The collaborators participated in coding sessions, implementation discussions, and knowledge-sharing activities during selected stages of development.
 
 ### Teamwork & Project Delivery
