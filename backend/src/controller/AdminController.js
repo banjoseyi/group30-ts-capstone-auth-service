@@ -3,14 +3,23 @@ import Session from "../model/Session.js";
 import AppError from "../utils/AppError.js";
 import mongoose from "mongoose";
 
+// Escape regex special characters, make the input literal
+const escapeSpecialRegex = (value) => {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 const getAllUsers = async (req, res, next) => {
     try {
+        // Ensure the page number is at least 1.
         const page = Math.max(Number(req.query.page) || 1, 1);
 
+        // Default to 10 users per page and set a limit of 100
         const limit = Math.min(Math.max(Number(req.query.limit) || 10, 1), 100);
 
+        // Calculate how many users to skip
         const skip = (page - 1) * limit;
 
+        // Build the search filter
         const filter = {};
 
         if (req.query.role) { filter.role = req.query.role; }
@@ -18,7 +27,7 @@ const getAllUsers = async (req, res, next) => {
         if (req.query.status) { filter.status = req.query.status; }
 
         if (req.query.search) {
-            const search = req.query.search;
+            const search = escapeSpecialRegex(req.query.search);
 
             filter.$or = [
                 {
@@ -48,6 +57,7 @@ const getAllUsers = async (req, res, next) => {
             ];
         }
 
+        // Fetch users current page
         const [users, total] = await Promise.all([
             User.find(filter)
                 .sort({ createdAt: -1 })
@@ -187,6 +197,7 @@ const updateUserStatus = async (req, res, next) => {
 
         await user.save();
 
+        // Revoke user's sessions when the account is suspended
         if (status === "suspended") {
             await Session.updateMany(
                 {
